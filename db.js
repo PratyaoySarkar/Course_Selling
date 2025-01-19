@@ -1,5 +1,6 @@
 const mongoose  = require('mongoose');
-mongoose.connect("mongodb+srv://Pratyaoy:Pratyaoy%402003@cluster0.no3qq.mongodb.net/course_Selling")
+//We should not connect the database here because it will be connected in the index.js file
+//mongoose.connect("mongodb+srv://Pratyaoy:Pratyaoy%402003@cluster0.no3qq.mongodb.net/course_Selling")
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
