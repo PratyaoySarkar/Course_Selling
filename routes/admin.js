@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const adminRouter = Router(); //The Router is the function not a class
+const { adminModel } = require("../db");
 
 adminRouter.post("/signup", function (req, res) {
     res.json({
@@ -13,7 +14,7 @@ adminRouter.get("/signin", function (req, res) {
     })
 })
 
-adminRouter.use(adminMiddleware); //Middleware for admin after signup or signin
+//adminRouter.use(adminMiddleware); //Middleware for admin after signup or signin
 
 adminRouter.post("/create-course", function (req, res) {
     res.json({
