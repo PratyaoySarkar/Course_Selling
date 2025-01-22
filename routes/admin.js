@@ -1,6 +1,13 @@
 const { Router } = require("express");
 const adminRouter = Router(); //The Router is the function not a class
 const { adminModel } = require("../db");
+//bcrypt is used to hash the password
+//jsonwebtoken is used to create the token
+//zod is used to validate the schema
+const { z } = require("zod");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "ilovecoding";
 
 adminRouter.post("/signup", function (req, res) {
     res.json({
