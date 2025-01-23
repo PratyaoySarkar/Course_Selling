@@ -5,6 +5,7 @@ const {courseRouter} = require("./routes/course");
 const {userRouter} = require("./routes/users");
 const {adminRouter} = require("./routes/admin");
 const app = express();
+app.use(express.json()); //To parse the body of the request
 
 app.use("/user", userRouter); //Divide the routes into different files
 app.use("/course", courseRouter);

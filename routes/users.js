@@ -1,11 +1,22 @@
 const {Router} = require("express");
+const bcrypt = require("bcrypt");
+const z = require("zod");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "ilovekiara"; 
 const { userModel } = require("../db");
 const userRouter = Router(); //The Router is the function not a class
 
 userRouter.post("/signup", async function(req,res){
     const {email, password, firstName, LastName} = req.body;
-    email: z.string().min(5).max(30).email();
-    password: z.string().min(8).max(30);
+    const emailSchema = z.string().min(5).max(30).email();
+    const passwordSchema = z.string().min(8).max(30);
+
+    try {
+        emailSchema.parse(email);
+        passwordSchema.parse(password);
+    } catch (e) {
+        return res.status(400).json({ message: "Invalid input" });
+    }
 
     let errorThrown = false;
     try{
@@ -17,13 +28,20 @@ userRouter.post("/signup", async function(req,res){
             password: hashPassword,
             firstName,
             LastName
-        })
-
-        res.json({
-            message: "You are signed up seccessfully"
-        })
+        });
     }
     catch(e){
+        res.json({
+            message: "This email is already in use"
+        })
+        errorThrown = true;
+    }
+    if(!errorThrown){
+        res.json({
+            message: "You have signed up successfully"
+        })
+    }
+    else{
         res.json({
             message: "Sign up failed. Please try again"
         })
@@ -31,10 +49,34 @@ userRouter.post("/signup", async function(req,res){
     
 })
 
-userRouter.post("/signin",function(req,res){
-    res.json({
-        message: "signup endpoint"
-    })
+userRouter.post("/signin", async function(req,res){
+    //Input validation through zod
+    const {email, password} = req.body;
+
+    const user = await userModel.findOne({
+        email: email,
+    });
+    if(!user){
+        res.status(403).json({
+            message:"User doesn't exist!"
+        })
+        return
+    }
+    console.log(user);
+    const passWordMatch = await bcrypt.compare(password, user.password)
+
+    if(passWordMatch){
+        const token = jwt.sign({
+            id: user._id.toString() //As it is a speacial data type(Objectid), so we need to convert it to string
+        },JWT_SECRET);
+        res.json({
+            token: token
+        })
+    }else{
+        res.status(403).json({
+            message:"Incorrect credentials"
+        })
+    }
 })
 
 userRouter.get("/purchased",function(req,res){
