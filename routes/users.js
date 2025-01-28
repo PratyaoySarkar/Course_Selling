@@ -15,7 +15,7 @@ userRouter.post("/signup", async function(req,res){
         emailSchema.parse(email);
         passwordSchema.parse(password);
     } catch (e) {
-        return res.status(400).json({ message: "Invalid input" });
+        return res.status(400).json({ message: "Invalid input Format!!" });
     }
 
     let errorThrown = false;
@@ -53,7 +53,7 @@ userRouter.post("/signin", async function(req,res){
     //Input validation through zod
     const {email, password} = req.body;
 
-    const user = await userModel.findOne({
+    const user = await userModel.findOne({ //either user, or undefined
         email: email,
     });
     if(!user){
@@ -63,6 +63,7 @@ userRouter.post("/signin", async function(req,res){
         return
     }
     console.log(user);
+    //Compare this password and the user.password in the database
     const passWordMatch = await bcrypt.compare(password, user.password)
 
     if(passWordMatch){
