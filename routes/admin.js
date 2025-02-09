@@ -7,7 +7,7 @@ const { adminModel } = require("../db");
 const { z } = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const JWT_Admin_SECRET = "ilovecoding";//If by very low chance, the user and the admin having same objectId
+const { JWT_Admin_SECRET } = require("../config");//If by very low chance, the user and the admin having same objectId
 //are also having same email and password, then also the token will not be same, as the secret key is different for both
 
 adminRouter.post("/signup", async function (req, res) {

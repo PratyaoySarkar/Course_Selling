@@ -2,7 +2,7 @@ const {Router} = require("express");
 const bcrypt = require("bcrypt");
 const z = require("zod");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "ilovekiara"; 
+const { JWT_USER_SECRET } = require("../config");
 const { userModel } = require("../db");
 const userRouter = Router(); //The Router is the function not a class
 
@@ -69,7 +69,7 @@ userRouter.post("/signin", async function(req,res){
     if(passWordMatch){
         const token = jwt.sign({
             id: user._id.toString() //As it is a speacial data type(Objectid), so we need to convert it to string
-        },JWT_SECRET);
+        },JWT_USER_SECRET);
         res.json({
             token: token
         })
