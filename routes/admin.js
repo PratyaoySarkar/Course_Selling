@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const adminRouter = Router(); //The Router is the function not a class
-const { adminModel } = require("../db");
+const { adminModel, courseModel } = require("../db");
 //bcrypt is used to hash the password
 //jsonwebtoken is used to create the token
 //zod is used to validate the schema
@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_Admin_SECRET } = require("../config");//If by very low chance, the user and the admin having same objectId
 //are also having same email and password, then also the token will not be same, as the secret key is different for both
+const { adminMiddleware } = require("../middleware/admin");
 
 adminRouter.post("/signup", async function (req, res) {
     const {email, password, firstName, LastName} = req.body;
@@ -84,9 +85,20 @@ adminRouter.post("/signin", async function (req, res) {
 
 //adminRouter.use(adminMiddleware); //Middleware for admin after signup or signin
 
-adminRouter.post("/create-course", function (req, res) {
+adminRouter.post("/create-course",adminMiddleware, async function (req, res) {
+    const adminId = req.userId;
+    const {title, description, price, imageURL} = req.body;
+
+    const course = await courseModel.create({
+        title,
+        description,
+        price,
+        imageURL,
+        creatorId : adminId
+    })
     res.json({
-        message: "signup endpoint"
+        message: "Course created successfully",
+        courseId: course._id //Speciefic object id in database for this course
     })
 })
 
