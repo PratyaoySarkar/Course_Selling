@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -16,7 +17,7 @@ app.use("/admin", adminRouter);
 
 //Before listening to the port we should connect to the database, otherwise, the schema will not get updated to the database
 async function connect(){
-    await mongoose.connect("mongodb+srv://Pratyaoy:Pratyaoy%402003@cluster0.no3qq.mongodb.net/course_Selling");
+    await mongoose.connect(process.env.MONGO_URL);
     console.log("Connected to the database");
     app.listen(3000);
     console.log("Listening on port 3000");
