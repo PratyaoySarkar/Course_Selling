@@ -1,4 +1,4 @@
-const {Router} = require("express");
+const { Router } = require("express");
 const bcrypt = require("bcrypt");
 const z = require("zod");
 const jwt = require("jsonwebtoken");

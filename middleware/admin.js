@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const { JWT_Admin_SECRET } = require("../config");
 
 //We can use a single middleware for both admin and user
@@ -32,4 +32,4 @@ function adminMiddleware(req, res, next) {
   }
 }
 
-module.exports = adminMiddleware;
+module.exports = { adminMiddleware };
