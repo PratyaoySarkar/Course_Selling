@@ -4,7 +4,9 @@ const z = require("zod");
 const jwt = require("jsonwebtoken");
 const { JWT_USER_SECRET } = require("../config");
 const { userModel } = require("../db");
+const { purchaseModel, courseModel } = require("../db");
 const userRouter = Router(); //The Router is the function not a class
+const { userMiddleware } = require("../middleware/user");
 
 userRouter.post("/signup", async function(req,res){
     const {email, password, firstName, LastName} = req.body;
@@ -80,9 +82,18 @@ userRouter.post("/signin", async function(req,res){
     }
 })
 
-userRouter.get("/purchased",function(req,res){
+userRouter.get("/mypurchases", userMiddleware, async function(req, res){
+    const userId = req.userId;
+
+    const purchases = await purchaseModel.find({
+        userId
+    });
+    const courseData = await courseModel.find({
+        _id: { $in: purchases.map(x => x.courseId) }
+    })
     res.json({
-        message: "signup endpoint"
+        purchases,
+        courseData
     })
 })
 
